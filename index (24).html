@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mihajlo Milenkovic — BTS SIO SISR</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090e;--surface:#0f151e;--border:#1b2737;
+  --accent:#00c8ff;--green:#00ff9d;--orange:#ff6b35;--yellow:#ffd700;
+  --text:#b8cce0;--dim:#3d5470;--white:#edf4ff;--codebg:#050810;
+  --mono:'Share Tech Mono',monospace;
+  --display:'Bebas Neue',sans-serif;
+  --body:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;cursor:none;}
+#cur{position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+#curR{position:fixed;width:30px;height:30px;border:1px solid rgba(0,200,255,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.018) 1px,transparent 1px);background-size:55px 55px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 4rem;background:rgba(7,9,14,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--display);font-size:2rem;color:var(--white);letter-spacing:4px;}
+.logo b{color:var(--accent);}
+.nav-links{display:flex;list-style:none;gap:2.5rem;}
+.nav-links a{font-family:var(--mono);font-size:.72rem;letter-spacing:2px;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:3px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--accent);transition:width .3s;}
+.nav-links a:hover{color:var(--accent);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{font-family:var(--mono);font-size:.7rem;letter-spacing:2px;color:var(--bg);background:var(--accent);padding:.5rem 1.4rem;text-decoration:none;text-transform:uppercase;border-radius:2px;transition:background .2s;}
+.nav-cta:hover{background:var(--green);}
+.sec{position:relative;z-index:1;padding:7rem 4rem 5rem;max-width:1200px;margin:0 auto;}
+.eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:.8rem;}
+.eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent);}
+.sec-title{font-family:var(--display);font-size:clamp(3rem,6vw,5.5rem);color:var(--white);line-height:.95;letter-spacing:2px;margin-bottom:3.5rem;}
+.sec-title span{color:var(--accent);}
+.divider{position:relative;z-index:1;width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+#home{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:6rem 4rem 4rem;overflow:hidden;}
+.hero-bg{position:absolute;right:-2rem;top:50%;transform:translateY(-50%);font-family:var(--display);font-size:22vw;color:transparent;-webkit-text-stroke:1px rgba(0,200,255,.035);pointer-events:none;user-select:none;line-height:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.7rem;letter-spacing:3px;color:var(--green);text-transform:uppercase;padding:.35rem 1rem;border:1px solid rgba(0,255,157,.18);border-radius:2px;background:rgba(0,255,157,.04);margin-bottom:2rem;}
+.bdot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-name{font-family:var(--display);font-size:clamp(4.5rem,11vw,10rem);color:var(--white);line-height:.92;letter-spacing:3px;margin-bottom:1.5rem;}
+.hero-name .out{color:transparent;-webkit-text-stroke:1.5px var(--accent);}
+.hero-sub{font-family:var(--mono);font-size:.85rem;color:var(--dim);line-height:1.9;max-width:500px;margin-bottom:2.5rem;}
+.hero-sub span{color:var(--accent);}
+.hbtns{display:flex;gap:1rem;flex-wrap:wrap;}
+.bp{font-family:var(--mono);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;padding:.85rem 2rem;background:var(--accent);color:var(--bg);text-decoration:none;border-radius:2px;font-weight:700;transition:all .2s;}
+.bp:hover{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);}
+.bg2{font-family:var(--mono);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;padding:.85rem 2rem;background:transparent;color:var(--dim);text-decoration:none;border:1px solid var(--border);border-radius:2px;transition:all .2s;}
+.bg2:hover{border-color:var(--accent);color:var(--accent);}
+.agrid{display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:start;}
+.ap{font-size:.95rem;color:var(--text);line-height:1.95;margin-bottom:1.3rem;font-weight:300;}
+.ap strong{color:var(--accent);font-weight:500;}
+.ilist{display:flex;flex-direction:column;gap:.9rem;}
+.irow{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1.2rem 1.6rem;display:flex;align-items:center;gap:1.2rem;transition:border-color .3s;}
+.irow:hover{border-color:var(--accent);}
+.ico{font-size:1.2rem;flex-shrink:0;}
+.ilbl{font-family:var(--mono);font-size:.62rem;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:.25rem;}
+.ival{font-size:.9rem;color:var(--white);font-weight:500;}
+.isub{font-size:.78rem;color:var(--dim);margin-top:.15rem;}
+.cb{margin-bottom:3.5rem;}
+.ch{font-family:var(--display);font-size:1.6rem;letter-spacing:3px;color:var(--white);margin-bottom:1.3rem;display:flex;align-items:center;gap:1rem;}
+.ch::after{content:'';flex:1;height:1px;background:var(--border);}
+.chips{display:flex;flex-wrap:wrap;gap:.6rem;}
+.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:1.5px;padding:.45rem .95rem;border-radius:2px;text-transform:uppercase;transition:all .2s;cursor:default;border:1px solid;}
+.cb2{color:var(--accent);border-color:rgba(0,200,255,.2);background:rgba(0,200,255,.05);}
+.cb2:hover{background:rgba(0,200,255,.12);border-color:var(--accent);transform:translateY(-2px);}
+.cg2{color:var(--green);border-color:rgba(0,255,157,.2);background:rgba(0,255,157,.05);}
+.cg2:hover{background:rgba(0,255,157,.12);border-color:var(--green);transform:translateY(-2px);}
+.co2{color:var(--orange);border-color:rgba(255,107,53,.2);background:rgba(255,107,53,.05);}
+.co2:hover{background:rgba(255,107,53,.12);border-color:var(--orange);transform:translateY(-2px);}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:1rem;}
+.vc{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;position:relative;overflow:hidden;transition:border-color .3s;}
+.vc::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--accent),var(--green));}
+.vc:hover{border-color:var(--accent);}
+.vc h3{font-family:var(--display);font-size:1.4rem;letter-spacing:2px;color:var(--accent);margin-bottom:.9rem;}
+.vc p{font-size:.85rem;color:var(--dim);line-height:1.85;}
+.tl{position:relative;padding-left:2.5rem;}
+.tl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--accent),rgba(0,200,255,.1));}
+.sc{position:relative;margin-bottom:2.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2.2rem 2.5rem;transition:border-color .3s,transform .3s;}
+.sc::before{content:'';position:absolute;left:-2.6rem;top:2.4rem;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);}
+.sc:hover{border-color:var(--green);transform:translateX(6px);}
+.sp{font-family:var(--mono);font-size:.65rem;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem;}
+.sco{font-family:var(--display);font-size:2rem;letter-spacing:2px;color:var(--white);margin-bottom:.2rem;}
+.sro{font-size:.85rem;color:var(--green);font-weight:500;margin-bottom:1rem;}
+.sd{font-size:.88rem;color:var(--dim);line-height:1.85;margin-bottom:1rem;}
+.task{display:flex;align-items:flex-start;gap:.7rem;font-size:.85rem;color:var(--text);margin-bottom:.45rem;}
+.task::before{content:'▸';color:var(--accent);flex-shrink:0;margin-top:1px;}
+.sc-dl{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);text-decoration:none;padding:.55rem 1.1rem;border:1px solid var(--border);border-radius:2px;margin-top:.8rem;transition:all .2s;}
+.sc-dl:hover{border-color:var(--accent);background:rgba(0,200,255,.07);color:var(--green);}
+.tpgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;}
+.tpcard{background:var(--surface);border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;transition:border-color .3s;}
+.tpcard:hover{border-color:var(--accent);}
+.tptop{padding:1.8rem;flex:1;}
+.tpmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.tpnum{font-family:var(--mono);font-size:.65rem;letter-spacing:3px;color:var(--dim);}
+.tpcard h3{font-family:var(--display);font-size:1.3rem;letter-spacing:2px;color:var(--white);margin-bottom:.7rem;line-height:1.2;}
+.tpcard p{font-size:.84rem;color:var(--dim);line-height:1.75;}
+.tpbot{padding:.8rem 1.8rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.tptags{display:flex;gap:.4rem;flex-wrap:wrap;}
+.ts{font-family:var(--mono);font-size:.6rem;padding:.2rem .55rem;border-radius:2px;border:1px solid;}
+.dlbtn{display:flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--mono);font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);text-decoration:none;padding:.75rem 1rem;border-top:1px solid var(--border);transition:background .2s,color .2s;}
+.dlbtn:hover{background:rgba(0,200,255,.1);color:var(--green);border-top-color:var(--green);}
+.clinks{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:2rem;}
+.clink{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:.65rem 1.4rem;border:1px solid var(--border);border-radius:2px;transition:all .2s;}
+.clink:hover{color:var(--accent);border-color:var(--accent);}
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:1.8rem 4rem;display:flex;justify-content:space-between;align-items:center;}
+footer p{font-family:var(--mono);font-size:.68rem;letter-spacing:1px;color:var(--dim);}
+footer span{color:var(--accent);}
+.fi{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease;}
+.fi.v{opacity:1;transform:translateY(0);}
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}.nav-links{display:none;}
+  .sec{padding:5rem 1.5rem 3rem;}#home{padding:6rem 1.5rem 3rem;}
+  .agrid{grid-template-columns:1fr;gap:2.5rem;}
+  .vgrid{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:.4rem;text-align:center;}
+  .hero-bg{display:none;}
+  .tpgrid{grid-template-columns:1fr;}
+}
+
+.chip{position:relative;}
+.chip:hover{cursor:pointer;}
+.chip-tooltip{display:none;position:fixed;z-index:1000;background:#0f151e;border:1px solid #00c8ff;border-radius:4px;padding:.8rem 1rem;max-width:300px;font-family:'DM Sans',sans-serif;font-size:.8rem;color:#b8cce0;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,.5);pointer-events:none;}
+.chip-tooltip.show{display:block;}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+
+<nav>
+  <div class="logo"><b>M</b>M</div>
+  <ul class="nav-links">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#stages">Stages</a></li>
+    <li><a href="#projets">Projets &amp; TP</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Contact</a>
+</nav>
+
+<!-- HERO -->
+<div id="home">
+  <div class="hero-bg">SISR</div>
+  <div style="max-width:800px;position:relative;z-index:2;">
+    <div class="hero-badge"><div class="bdot"></div>BTS SIO — SISR · Marseille, France</div>
+    <div class="hero-name">MIHAJLO<br><span class="out">MILENKOVIC</span></div>
+    <p class="hero-sub">Étudiant en <span>Systèmes &amp; Réseaux</span> à Marseille.<br>Passionné par l'infrastructure IT,<br>l'administration système et la sécurité réseau.</p>
+    <div class="hbtns">
+      <a href="#projets" class="bp">Voir mes projets</a>
+      <a href="#stages" class="bg2">Mes stages</a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- A PROPOS -->
+<div id="about" style="position:relative;z-index:1;">
+<div class="sec">
+  <div class="eyebrow fi">À propos</div>
+  <div class="sec-title fi">QUI<br>SUIS-<span>JE ?</span></div>
+  <div class="agrid">
+    <div>
+      <p class="ap fi">Je suis <strong>Mihajlo Milenkovic</strong>, étudiant en <strong>BTS SIO option SISR</strong> à Marseille. Compétences solides en administration système, réseaux et support informatique.</p>
+      <div class="fi" style="margin-bottom:1.5rem;">
+        <!-- Timeline parcours scolaire -->
+        <div style="font-family:var(--mono);font-size:.62rem;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;">Parcours scolaire</div>
+        <div style="display:flex;flex-direction:column;gap:0;">
+
+          <!-- Bac Pro -->
+          <div style="display:flex;align-items:stretch;gap:1rem;">
+            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-top:.35rem;flex-shrink:0;"></div>
+              <div style="width:1px;flex:1;background:linear-gradient(180deg,var(--green),var(--accent));margin-top:4px;"></div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem 1.2rem;margin-bottom:.6rem;flex:1;transition:border-color .3s;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+              <div style="font-family:var(--mono);font-size:.6rem;color:var(--green);letter-spacing:2px;margin-bottom:.3rem;">2021 — 2024</div>
+              <div style="font-size:.88rem;color:var(--white);font-weight:600;">Bac Pro Systèmes Numériques</div>
+              <div style="font-size:.82rem;color:var(--dim);margin-top:.2rem;">Option RISC · Lycée Ampère, Marseille</div>
+              <div style="font-family:var(--mono);font-size:.65rem;color:var(--green);margin-top:.4rem;">✓ Mention Bien</div>
+            </div>
+          </div>
+
+          <!-- BTS SIO -->
+          <div style="display:flex;align-items:stretch;gap:1rem;">
+            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);margin-top:.35rem;flex-shrink:0;"></div>
+              <div style="width:1px;flex:1;background:linear-gradient(180deg,var(--accent),var(--orange));margin-top:4px;"></div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--accent);border-radius:3px;padding:1rem 1.2rem;margin-bottom:.6rem;flex:1;">
+              <div style="font-family:var(--mono);font-size:.6rem;color:var(--accent);letter-spacing:2px;margin-bottom:.3rem;">2024 — 2026 · EN COURS</div>
+              <div style="font-size:.88rem;color:var(--white);font-weight:600;">BTS SIO option SISR</div>
+              <div style="font-size:.82rem;color:var(--dim);margin-top:.2rem;">Services Informatiques aux Organisations · Lycée Victor Hugo, Marseille</div>
+              <div style="font-family:var(--mono);font-size:.65rem;color:var(--accent);margin-top:.4rem;">● 2ème année en cours</div>
+            </div>
+          </div>
+
+          <!-- Flèche future -->
+          <div style="display:flex;align-items:stretch;gap:1rem;">
+            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+              <div style="width:10px;height:10px;border-radius:50%;border:2px dashed var(--orange);margin-top:.35rem;flex-shrink:0;"></div>
+            </div>
+            <div style="border:1px dashed rgba(255,107,53,.35);border-radius:3px;padding:1rem 1.2rem;margin-bottom:.2rem;flex:1;background:rgba(255,107,53,.03);">
+              <div style="font-family:var(--mono);font-size:.6rem;color:var(--orange);letter-spacing:2px;margin-bottom:.4rem;">OBJECTIF → 2026 ET APRÈS</div>
+              <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+                <div style="text-align:center;">
+                  <div style="font-size:.82rem;color:var(--white);font-weight:600;">Licence 3</div>
+                  <div style="font-family:var(--mono);font-size:.62rem;color:var(--dim);">Informatique</div>
+                </div>
+                <div style="font-family:var(--mono);font-size:1rem;color:var(--orange);">→</div>
+                <div style="text-align:center;">
+                  <div style="font-size:.82rem;color:var(--white);font-weight:600;">Master</div>
+                  <div style="font-family:var(--mono);font-size:.62rem;color:var(--dim);">Réseaux &amp; Sécurité / Cybersécurité</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <p class="ap fi">Deux stages chez <strong>Inovie</strong> (groupe biologie médicale) : configuration de switches, création de masters, gestion de tickets GLPI et déploiement de postes Windows 11.</p>
+
+      <div class="fi" style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+        <a href="#contact" class="bp">Me contacter</a>
+        <a href="CV_Mihajlo_Milenkovic.pdf" target="_blank" class="sc-dl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Télécharger mon CV</a>
+      </div>
+    </div>
+    <div class="ilist fi">
+      <div class="irow"><div class="ico">🎓</div><div><div class="ilbl">Formation</div><div class="ival">BTS SIO — option SISR</div><div class="isub">Lycée Victor Hugo, Marseille</div></div></div>
+      <div class="irow"><div class="ico">📍</div><div><div class="ilbl">Localisation</div><div class="ival">Marseille, France</div><div class="isub">Disponible pour stages &amp; alternance</div></div></div>
+      <div class="irow"><div class="ico">🏢</div><div><div class="ilbl">Entreprise de stage</div><div class="ival">Inovie — Biologie Médicale</div><div class="isub">2 stages de 6 semaines</div></div></div>
+      <div class="irow"><div class="ico">🎮</div><div><div class="ilbl">Centres d'intérêt</div><div class="ival">Jeux vidéo · Informatique · Sport</div><div class="isub">Promenade</div></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- COMPETENCES -->
+<div id="competences" style="position:relative;z-index:1;">
+<div class="sec">
+  <div class="eyebrow fi">Savoir-faire</div>
+  <div class="sec-title fi">MES<br><span>COMPÉTENCES</span></div>
+  <div class="cb fi"><div class="ch">Protocoles</div><div class="chips"><span class="chip cb2">HTTP/HTTPS</span><span class="chip cb2">DNS</span><span class="chip cb2">DHCP</span><span class="chip cb2">FTP</span><span class="chip cb2">ARP</span><span class="chip cb2">TCP</span><span class="chip cb2">UDP</span><span class="chip cb2">POP3</span></div></div>
+  <div class="cb fi"><div class="ch">Éléments Réseau</div><div class="chips"><span class="chip cg2">IPv4</span><span class="chip cg2">IPv6</span><span class="chip cg2">Masque sous-réseau</span><span class="chip cg2">Passerelle</span><span class="chip cg2">NAT</span><span class="chip cg2">VLAN</span><span class="chip cg2">Pare-feu</span><span class="chip cg2">VPN</span><span class="chip cg2">Filtrage</span></div></div>
+  <div class="cb fi"><div class="ch">Systèmes</div><div class="chips"><span class="chip co2">Windows 10/11</span><span class="chip co2">Linux Debian</span><span class="chip co2">Windows Server</span><span class="chip co2">VMware</span><span class="chip co2">Proxmox</span></div></div>
+  <div class="cb fi"><div class="ch">Services &amp; Outils</div><div class="chips"><span class="chip cb2">Active Directory</span><span class="chip cb2">DNS Server</span><span class="chip cb2">DHCP Server</span><span class="chip cb2">GLPI</span><span class="chip cb2">Zabbix</span><span class="chip cb2">HAProxy</span><span class="chip cg2">Packet Tracer</span><span class="chip cg2">Wireshark</span></div></div>
+  <div class="cb fi"><div class="ch">Veille Technologique</div>
+    <div class="vgrid">
+      <div class="vc"><h3>C'EST QUOI ?</h3><p>La veille informatique consiste à se tenir au courant de tout ce qui change : nouvelles technologies, cyberattaques, mises à jour importantes, failles de sécurité.</p></div>
+      <div class="vc"><h3>POURQUOI ?</h3><p>Les technologies évoluent très rapidement. Une veille régulière permet de rester informé des nouveautés, des failles et des évolutions des systèmes et réseaux.</p></div>
+    </div>
+    <div style="margin-top:1.5rem;background:var(--codebg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px;padding:1.4rem 1.6rem;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:.8rem;">
+        <span style="font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spacing:2px;">26 MARS 2026 &nbsp;·&nbsp; RÉSEAU &nbsp;·&nbsp; CVE-2025-62673</span>
+        <span style="font-family:var(--mono);font-size:.65rem;color:var(--orange);letter-spacing:1px;">⚠ CRITIQUE</span>
+      </div>
+      <div style="font-size:1rem;color:var(--white);font-weight:700;margin-bottom:.6rem;">Failles critiques sur les routeurs TP-Link Archer NX</div>
+      <p style="font-size:.86rem;color:var(--dim);line-height:1.8;margin-bottom:1rem;">Cisco Talos a révélé <strong style="color:var(--white)">10 vulnérabilités</strong> sur les routeurs TP-Link Archer AX53 et NX. 9 concernent la sûreté mémoire (buffer overflow) permettant l'<strong style="color:var(--orange)">exécution de code arbitraire à distance</strong>. La 10ème touche la clé SSH, exposant les identifiants à une attaque <em>man-in-the-middle</em>.</p>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+        <span style="font-family:var(--mono);font-size:.72rem;color:var(--green);background:rgba(0,255,157,.07);border:1px solid rgba(0,255,157,.2);padding:.3rem .7rem;border-radius:2px;">✓ Correctif disponible</span>
+        <a href="https://www.journalduweb.org/tp-link-alerte-sur-une-faille-critique-dans-ses-routeurs-archer-nx-la-mise-a-jour-devient-urgente/" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:.72rem;color:var(--accent);text-decoration:none;margin-left:auto;transition:color .2s;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--accent)'">Lire l'article complet →</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STAGES -->
+<div id="stages" style="position:relative;z-index:1;">
+<div class="sec">
+  <div class="eyebrow fi">Expériences</div>
+  <div class="sec-title fi">MES<br><span>STAGES</span></div>
+  <div class="tl fi">
+    <div class="sc">
+      <div class="sp">Stage 2 — 6 semaines · 2024</div>
+      <div class="sco">INOVIE</div>
+      <div class="sro">Technicien Systèmes &amp; Réseaux — Groupe Biologie Médicale</div>
+      <p class="sd">Missions autonomes sur l'infrastructure réseau, gestion de parc et support avancé multi-sites.</p>
+      <div class="task">Création de masters sur un serveur dédié pour le déploiement des postes.</div>
+      <div class="task">Configuration et paramétrage de switches réseau (VLANs, ports trunk/access).</div>
+      <div class="task">Gestion complète du cycle de vie des tickets via GLPI.</div>
+      <div class="task">Migration de postes utilisateurs vers Windows 11.</div>
+      <div class="task">Intégration de machines au domaine Active Directory.</div>
+      <div style="margin-top:1.2rem;" class="chips"><span class="chip cb2">GLPI</span><span class="chip cb2">Switch</span><span class="chip cg2">Windows 11</span><span class="chip cg2">Active Directory</span><span class="chip co2">Création de masters</span></div>
+      <a href="Attestation_Stage2_Inovie_2026.pdf" target="_blank" class="sc-dl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Attestation de stage</a>
+    </div>
+    <div class="sc">
+      <div class="sp">Stage 1 — 6 semaines · 2023</div>
+      <div class="sco">INOVIE</div>
+      <div class="sro">Technicien Support IT — Groupe Biologie Médicale</div>
+      <p class="sd">Première expérience professionnelle dans l'équipe IT d'un groupe médical multi-sites.</p>
+      <div class="task">Prise en main de GLPI pour la gestion des tickets de support.</div>
+      <div class="task">Mise à jour de postes vers Windows 11 : vérification compatibilité, sauvegarde, déploiement.</div>
+      <div class="task">Assistance aux utilisateurs sur site (dépannage matériel et logiciel).</div>
+      <div class="task">Inventaire du parc informatique et mise à jour de la CMDB.</div>
+      <div style="margin-top:1.2rem;" class="chips"><span class="chip cb2">GLPI</span><span class="chip cg2">Windows 11</span><span class="chip cg2">Support IT</span><span class="chip co2">Inventaire</span></div>
+      <a href="Attestation_Stage1_Inovie_2025.pdf" target="_blank" class="sc-dl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Attestation de stage</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PROJETS -->
+<div id="projets" style="position:relative;z-index:1;">
+<div class="sec">
+  <div class="eyebrow fi">Travaux pratiques</div>
+  <div class="sec-title fi">PROJETS<br><span>&amp; TP</span></div>
+  <p class="fi" style="font-family:var(--mono);font-size:.78rem;color:var(--dim);margin-bottom:1.2rem;letter-spacing:1px;">▼ Clique sur le bouton PDF de chaque carte pour télécharger</p>
+
+  <!-- Fiche technique Innovarex + Tableau de Synthèse E5 -->
+  <div class="fi" style="margin-bottom:2rem;display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;">
+      <div style="padding:1.4rem 1.6rem;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;">
+          <span style="font-family:var(--mono);font-size:.65rem;letter-spacing:2px;color:var(--accent);">MAQUETTE SCOLAIRE</span>
+          <span style="font-family:var(--mono);font-size:.65rem;color:var(--dim);">2025 — 2026</span>
+        </div>
+        <div style="font-size:1rem;color:var(--white);font-weight:700;margin-bottom:.4rem;">Fiche Technique — Innovarex</div>
+        <p style="font-size:.83rem;color:var(--dim);line-height:1.7;margin:0;">Infrastructure réseau complète : VLANs, Active Directory, serveurs Windows &amp; Debian, switches Cisco, plan d'adressage et topologie.</p>
+      </div>
+      <div style="padding:.8rem 1.6rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+          <span style="font-family:var(--mono);font-size:.6rem;color:var(--accent);border:1px solid rgba(0,200,255,.2);padding:.2rem .55rem;border-radius:2px;">Cisco IOS</span>
+          <span style="font-family:var(--mono);font-size:.6rem;color:var(--green);border:1px solid rgba(0,255,157,.2);padding:.2rem .55rem;border-radius:2px;">Active Directory</span>
+          <span style="font-family:var(--mono);font-size:.6rem;color:var(--orange);border:1px solid rgba(255,107,53,.2);padding:.2rem .55rem;border-radius:2px;">VLANs</span>
+        </div>
+        <a href="Fiche_Technique_Innovarex.pdf" target="_blank" style="font-family:var(--mono);font-size:.7rem;letter-spacing:1.5px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:color .2s;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--accent)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;PDF</a>
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;">
+      <div style="padding:1.4rem 1.6rem;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;">
+          <span style="font-family:var(--mono);font-size:.65rem;letter-spacing:2px;color:var(--yellow);">ÉPREUVE ORALE E5</span>
+          <span style="font-family:var(--mono);font-size:.65rem;color:var(--dim);">BTS SIO 2026</span>
+        </div>
+        <div style="font-size:1rem;color:var(--white);font-weight:700;margin-bottom:.4rem;">Tableau de Synthèse — Annexe VI-1</div>
+        <p style="font-size:.83rem;color:var(--dim);line-height:1.7;margin:0;">Modèle officiel du tableau de synthèse pour l'épreuve orale E5 — BTS SIO 2026.</p>
+      </div>
+      <div style="padding:.8rem 1.6rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+          <span style="font-family:var(--mono);font-size:.6rem;color:var(--yellow);border:1px solid rgba(255,215,0,.2);padding:.2rem .55rem;border-radius:2px;">E5</span>
+          <span style="font-family:var(--mono);font-size:.6rem;color:var(--accent);border:1px solid rgba(0,200,255,.2);padding:.2rem .55rem;border-radius:2px;">BTS SIO</span>
+          <span style="font-family:var(--mono);font-size:.6rem;color:var(--green);border:1px solid rgba(0,255,157,.2);padding:.2rem .55rem;border-radius:2px;">Oral</span>
+        </div>
+        <a href="8_-_EPREUVE_ORALE_E5_-_MODELE_DE_TABLEAU_DE_SYNTHESE_ANNEXE_VI-1_-_BTS_SIO_2026.pdf" target="_blank" style="font-family:var(--mono);font-size:.7rem;letter-spacing:1.5px;color:var(--yellow);text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:color .2s;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--yellow)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;PDF</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tpgrid fi">
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_01</span></div><h3>Installation Windows Server 2022</h3><p>Installation et configuration complète d'un serveur Windows Server 2022 — Inovie.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts co2">Windows Server</span><span class="ts cb2">Active Directory</span><span class="ts cg2">Inovie</span></div></div>
+      <a href="TP01_Installation_Windows_Server.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_02</span></div><h3>Installation Debian 12 (Linux)</h3><p>Installation et configuration d'un serveur Debian 12 avec services réseau — Inovie.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cg2">Linux</span><span class="ts cg2">Debian 12</span><span class="ts cg2">Inovie</span></div></div>
+      <a href="TP03_Installation_Debian12.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_03</span></div><h3>Déploiement Active Directory</h3><p>Windows Server 2022, installation AD DS et DNS, promotion en contrôleur de domaine.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cb2">AD DS</span><span class="ts cb2">DNS</span><span class="ts co2">Windows Server</span></div></div>
+      <a href="TP04_Active_Directory_AD_DS_DNS.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_04</span></div><h3>EtherChannel</h3><p>Configuration d'un EtherChannel (LACP/PAgP) pour l'agrégation de liens entre switches Cisco.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cb2">Cisco</span><span class="ts cb2">LACP</span><span class="ts cg2">Packet Tracer</span></div></div>
+      <div class="dlbtn" style="color:var(--dim);cursor:default;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;PDF À VENIR</div>
+    </div>
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_05</span></div><h3>Configuration des VLANs</h3><p>Création, attribution sur ports et trunk 802.1Q — Cisco IOS / Packet Tracer.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cb2">VLAN</span><span class="ts co2">Cisco</span><span class="ts cg2">Réseau</span></div></div>
+      <a href="TP_VLAN.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_06</span></div><h3>Load Balancing avec HAProxy</h3><p>Round Robin sur 2 serveurs Apache, détection de panne automatique — 4 VMs VMware.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cb2">HAProxy</span><span class="ts cg2">Round Robin</span><span class="ts co2">Debian</span></div></div>
+      <a href="TP010_Load_Balancing_HAProxy.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_07</span></div><h3>DHCP sous Windows Server 2022</h3><p>Serveur DHCP + client Windows 10 sur réseau interne VirtualBox LabInternal.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cg2">DHCP</span><span class="ts co2">Windows Server</span><span class="ts cb2">VirtualBox</span></div></div>
+      <a href="TP002_DHCP_Windows.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_08</span></div><h3>Redondance DHCP Windows Server</h3><p>Basculement DHCP (failover) sous Windows Server 2022 — équilibrage de charge et haute disponibilité.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts co2">DHCP</span><span class="ts cb2">Windows Server</span><span class="ts cg2">Failover</span></div></div>
+      <a href="TP09_DHCP_Redondance.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    
+
+    <!-- TP MDT -->
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_09</span></div><h3>Serveur de supervision Zabbix 7.4</h3><p>Monitoring Linux, Windows, Cisco SNMP — Dashboards, alertes, cartes réseau — Debian 12 + Proxmox.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cb2">Zabbix</span><span class="ts cg2">SNMP</span><span class="ts co2">Monitoring</span></div></div>
+      <a href="TP008_Serveur_Supervision_Zabbix.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+    <div class="tpcard">
+      <div class="tptop"><div class="tpmeta"><span class="tpnum">TP_10</span></div><h3>Création et déploiement de Masters MDT</h3><p>Préparation PC, capture Sysprep, publication WDS, ajout pilotes — Stage Inovie.</p></div>
+      <div class="tpbot"><div class="tptags"><span class="ts cb2">MDT</span><span class="ts cb2">Sysprep</span><span class="ts cg2">Windows 11</span><span class="ts co2">Inovie</span></div></div>
+      <a href="TP_Master_MDT.pdf" target="_blank" class="dlbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;TELECHARGER LE PDF</a>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<div id="contact" style="position:relative;z-index:1;">
+<div class="sec" style="text-align:center;">
+  <div class="eyebrow fi" style="justify-content:center;">Contact</div>
+  <div class="sec-title fi">TRAVAILLONS<br><span>ENSEMBLE</span></div>
+  <p class="fi" style="font-size:.95rem;color:var(--dim);line-height:1.85;max-width:520px;margin:0 auto 2rem;">Disponible pour des stages, alternances ou toute opportunité réseau &amp; systèmes à Marseille.</p>
+
+  <!-- Formulaire de contact -->
+  <div class="fi" style="max-width:580px;margin:0 auto 2.5rem;text-align:left;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;">
+      <div>
+        <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:.4rem;">Nom</label>
+        <input id="cf-nom" type="text" placeholder="Votre nom" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.75rem 1rem;color:var(--white);font-family:var(--body);font-size:.9rem;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div>
+        <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:.4rem;">Email</label>
+        <input id="cf-email" type="email" placeholder="votre@email.com" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.75rem 1rem;color:var(--white);font-family:var(--body);font-size:.9rem;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+    </div>
+    <div style="margin-bottom:.8rem;">
+      <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:.4rem;">Sujet</label>
+      <input id="cf-sujet" type="text" placeholder="Objet de votre message" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.75rem 1rem;color:var(--white);font-family:var(--body);font-size:.9rem;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div style="margin-bottom:1.2rem;">
+      <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:.4rem;">Message</label>
+      <textarea id="cf-message" rows="5" placeholder="Votre message..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.75rem 1rem;color:var(--white);font-family:var(--body);font-size:.9rem;outline:none;transition:border-color .2s;resize:vertical;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <button onclick="sendMail()" style="font-family:var(--mono);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;padding:.85rem 2rem;background:var(--accent);color:var(--bg);border:none;border-radius:2px;font-weight:700;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='var(--green)'" onmouseout="this.style.background='var(--accent)'">✉ Envoyer</button>
+      <span id="cf-status" style="font-family:var(--mono);font-size:.72rem;color:var(--green);display:none;">✓ Message envoyé !</span>
+    </div>
+  </div>
+
+  <div class="clinks fi">
+    <a href="https://www.linkedin.com/in/mihajlo-milenkovic-78207b399/" target="_blank" class="clink">💼 LinkedIn</a>
+    
+    <a href="CV_Mihajlo_Milenkovic.pdf" target="_blank" class="clink">📄 Télécharger CV</a>
+  </div>
+</div>
+</div>
+
+<script>
+function sendMail() {
+  var nom = document.getElementById('cf-nom').value.trim();
+  var email = document.getElementById('cf-email').value.trim();
+  var sujet = document.getElementById('cf-sujet').value.trim();
+  var msg = document.getElementById('cf-message').value.trim();
+  if (!nom || !email || !msg) {
+    alert("Merci de remplir au moins le nom, l'email et le message.");
+    return;
+  }
+  var body = 'Nom : ' + nom + '%0AEmail : ' + email + '%0A%0A' + msg;
+  var mailto = 'mailto:mikimilenkovic2005@gmail.com?subject=' + encodeURIComponent(sujet || 'Contact depuis le portfolio') + '&body=' + body;
+  window.location.href = mailto;
+  document.getElementById('cf-status').style.display = 'inline';
+  setTimeout(function(){ document.getElementById('cf-status').style.display = 'none'; }, 3000);
+}
+</script>
+
+<footer>
+  <p>© 2026 — <span>Mihajlo Milenkovic</span></p>
+  <p>BTS SIO SISR · <span>Marseille</span></p>
+  <p>Fait avec <span>❤</span> &amp; beaucoup de <span>ping</span></p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+var cur=document.getElementById('cur'),curR=document.getElementById('curR');
+var mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function anim(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(anim);})();
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('v');},i*80);obs.unobserve(e.target);}});},{threshold:0.08});
+document.querySelectorAll('.fi').forEach(function(el){obs.observe(el);});
+</script>
+
+
+<div class="chip-tooltip" id="chipTooltip"></div>
+<script>
+var DEFS = {"HTTP/HTTPS": "Protocole de transfert hypertexte. HTTP transmet les données du web, HTTPS est la version sécurisée avec chiffrement SSL/TLS.", "DNS": "Domain Name System — Traduit les noms de domaine en adresses IP compréhensibles par les machines.", "DHCP": "Dynamic Host Configuration Protocol — Attribue automatiquement une adresse IP, masque, passerelle et DNS à chaque appareil du réseau.", "FTP": "File Transfer Protocol — Protocole de transfert de fichiers entre un client et un serveur sur un réseau TCP/IP.", "ARP": "Address Resolution Protocol — Résout une adresse IP en adresse MAC pour permettre la communication sur le réseau local.", "TCP": "Transmission Control Protocol — Protocole de transport fiable avec accusé de réception, garantit la livraison des paquets dans l'ordre.", "UDP": "User Datagram Protocol — Protocole de transport rapide sans connexion ni accusé de réception, utilisé pour la vidéo ou le jeu.", "POP3": "Post Office Protocol v3 — Protocole de réception d'emails qui télécharge les messages du serveur vers le client.", "IPv4": "Internet Protocol version 4 — Système d'adressage sur 32 bits (ex: 192.168.1.1) permettant d'identifier chaque machine sur un réseau.", "IPv6": "Internet Protocol version 6 — Système d'adressage sur 128 bits, successeur d'IPv4 offrant un espace d'adressage quasi illimité.", "Masque sous-réseau": "Définit la portion réseau et la portion hôte d'une adresse IP. Exemple : 255.255.255.0 pour un réseau en /24.", "Passerelle": "Équipement servant de point de sortie du réseau local vers d'autres réseaux ou Internet, généralement un routeur.", "NAT": "Network Address Translation — Traduit les adresses IP privées en adresse publique pour permettre l'accès à Internet.", "VLAN": "Virtual Local Area Network — Segmentation logique du réseau permettant d'isoler des groupes de machines indépendamment du câblage physique.", "Pare-feu": "Dispositif filtrant le trafic réseau selon des règles pour bloquer les connexions non autorisées et protéger le réseau.", "VPN": "Virtual Private Network — Tunnel chiffré permettant de sécuriser les communications sur un réseau public comme Internet.", "Filtrage": "Contrôle du trafic réseau via des règles (ACL, pare-feu) pour autoriser ou bloquer des flux selon l'IP, le port ou le protocole.", "Windows 10/11": "Systèmes d'exploitation Microsoft pour postes de travail, utilisés pour le déploiement et la gestion du parc informatique.", "Linux Debian": "Distribution Linux stable et polyvalente, utilisée comme serveur (Apache, DHCP, DNS, Zabbix) dans les infrastructures réseau.", "Windows Server": "Système d'exploitation serveur Microsoft hébergeant des rôles comme AD DS, DNS, DHCP, serveur de fichiers.", "VMware": "Logiciel de virtualisation permettant de créer et gérer des machines virtuelles sur un serveur physique.", "Proxmox": "Plateforme de virtualisation open source basée sur KVM et LXC, utilisée pour gérer des VMs et conteneurs.", "Active Directory": "Service d'annuaire Microsoft gérant les utilisateurs, ordinateurs, groupes et politiques de sécurité d'un domaine Windows.", "DNS Server": "Serveur résolvant les noms de domaine en adresses IP pour les machines du réseau interne et externe.", "DHCP Server": "Serveur distribuant automatiquement les configurations réseau (IP, masque, passerelle, DNS) aux clients du réseau.", "GLPI": "Gestion Libre de Parc Informatique — Logiciel ITSM open source pour la gestion des tickets, du parc matériel et de la CMDB.", "Zabbix": "Outil de supervision réseau open source permettant de monitorer serveurs, switches et services via agents ou ICMP.", "HAProxy": "Reverse proxy et load balancer open source répartissant le trafic entre plusieurs serveurs pour la haute disponibilité.", "Packet Tracer": "Simulateur réseau Cisco permettant de concevoir et tester des topologies réseau avec des équipements Cisco virtuels.", "Wireshark": "Analyseur de protocoles réseau capturant et affichant en temps réel le trafic circulant sur une interface réseau."};
+var tooltip = document.getElementById("chipTooltip");
+document.querySelectorAll(".chip").forEach(function(chip) {
+  var name = chip.textContent.trim();
+  if (!DEFS[name]) return;
+  chip.style.cursor = "pointer";
+  chip.addEventListener("mouseenter", function(e) {
+    tooltip.textContent = name + " — " + DEFS[name];
+    tooltip.classList.add("show");
+    moveTooltip(e);
+  });
+  chip.addEventListener("mousemove", moveTooltip);
+  chip.addEventListener("mouseleave", function() {
+    tooltip.classList.remove("show");
+  });
+});
+function moveTooltip(e) {
+  var x = e.clientX + 14, y = e.clientY + 14;
+  if (x + 310 > window.innerWidth) x = e.clientX - 314;
+  if (y + 120 > window.innerHeight) y = e.clientY - 120;
+  tooltip.style.left = x + "px";
+  tooltip.style.top = y + "px";
+}
+</script>
+</body>
+</html>
